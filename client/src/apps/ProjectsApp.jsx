@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Folder, 
@@ -11,6 +11,7 @@ import {
   Smartphone, 
   CheckCircle2 
 } from 'lucide-react';
+import { useStore } from '../store/useStore';
 
 const Github = ({ size = 24 }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -18,8 +19,6 @@ const Github = ({ size = 24 }) => (
     <path d="M9 18c-4.5 1.5-5-2.5-7-3"/>
   </svg>
 );
-
-import { useStore } from '../store/useStore';
 
 const projects = [
   { id: 1, category: 'web', name: 'CRM (haajri.in)', tech: ['React', 'REST APIs', 'JSON'], link: 'https://haajri.in/', desc: 'Full-stack CRM platform for attendance & client tracking; built dynamic React dashboards and REST APIs.', longDesc: 'A comprehensive Customer Relationship Management tool designed for real-time attendance tracking and client management. Features high-performance data processing and seamless API integration.' },
@@ -58,6 +57,8 @@ export default function ProjectsApp() {
     { id: 'web', label: 'Web Systems', icon: <Globe size={14} /> },
     { id: 'util', label: 'Utilities', icon: <Cpu size={14} /> }
   ];
+
+  const isMobile = useStore(state => state.isMobile);
 
   /**
    * Helper to check if a URL points to GitHub.
