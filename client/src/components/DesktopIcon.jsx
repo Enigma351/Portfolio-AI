@@ -63,14 +63,14 @@ export default function DesktopIcon({ app }) {
         rotateX,
         rotateY
       }}
-      className="flex flex-col items-center justify-center p-4 w-28 h-32 cursor-pointer group"
+      className="flex flex-col items-center justify-center p-2 md:p-4 w-20 h-24 md:w-28 md:h-32 cursor-pointer group"
     >
       <div 
-        className="w-16 h-16 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl flex items-center justify-center shadow-[0_5px_15px_rgba(0,0,0,0.3)] group-hover:shadow-[0_0_25px_rgba(59,130,246,0.8)] group-hover:border-neon-blue transition-all duration-300 relative shadow-inner"
+        className="w-12 h-12 md:w-16 md:h-16 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl md:rounded-2xl flex items-center justify-center shadow-[0_5px_15px_rgba(0,0,0,0.3)] group-hover:shadow-[0_0_25px_rgba(59,130,246,0.8)] group-hover:border-neon-blue transition-all duration-300 relative shadow-inner"
         style={{ transformStyle: "preserve-3d" }}
       >
         <span style={{ transform: "translateZ(30px)" }}>
-           <IconComponent className="text-white w-8 h-8 drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]" />
+           <IconComponent className="text-white w-6 h-6 md:w-8 md:h-8 drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]" />
         </span>
         {app.unread > 0 && (
           <div 
@@ -82,7 +82,7 @@ export default function DesktopIcon({ app }) {
         )}
       </div>
       <span 
-        className="text-sm text-slate-100 font-semibold mt-3 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] tracking-wide group-hover:text-neon-blue transition-colors"
+        className="text-[10px] md:text-sm text-slate-100 font-semibold mt-2 md:mt-3 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] tracking-wide group-hover:text-neon-blue transition-colors text-center truncate w-full"
         style={{ transform: "translateZ(20px)" }}
       >
         {app.title}

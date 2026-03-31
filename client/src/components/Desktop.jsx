@@ -46,14 +46,14 @@ export default function Desktop() {
       <div className="absolute inset-0 -z-20 bg-black/30 backdrop-blur-[2px]"></div>
       
       {/* Desktop Grid Icons */}
-      <div className="flex flex-col flex-wrap h-[calc(100vh-4rem)] p-4 gap-2 content-start z-10 relative">
+      <div className="flex flex-col flex-wrap h-[calc(100vh-4rem)] p-2 md:p-4 gap-1 md:gap-2 content-start z-10 relative">
         {apps.map(app => (
           <DesktopIcon key={app.id} app={app} />
         ))}
       </div>
 
       {/* Windows Layer */}
-      <div className="absolute inset-0 pointer-events-none z-20 pointer-events-auto">
+      <div className="absolute inset-0 pointer-events-none z-30 pointer-events-auto">
         <AnimatePresence>
           {openWindows.filter(id => !minimizedWindows.includes(id)).map(appId => {
             const app = apps.find(a => a.id === appId);
@@ -67,8 +67,8 @@ export default function Desktop() {
         </AnimatePresence>
       </div>
 
-      {/* Cyber-Orb AI Companion */}
-      <div className="absolute bottom-16 right-4 w-96 h-[400px] pointer-events-none z-30">
+      {/* Cyber-Orb AI Mascot - Responsive Sizing - Fixed Clipping & Overlap */}
+      <div className="absolute bottom-16 right-0 md:right-4 w-40 h-80 md:w-96 md:h-[400px] pointer-events-none z-20">
         <AiMascot />
       </div>
 
@@ -91,12 +91,13 @@ export default function Desktop() {
                 <div 
                   key={id} 
                   onClick={() => isMinimized ? minimizeApp(id) : openApp(id)}
-                  className={`px-3 py-1 cursor-pointer rounded text-xs font-semibold tracking-wider transition-all duration-300 border-b-2
+                  className={`px-2 md:px-3 py-1 cursor-pointer rounded text-[10px] md:text-xs font-semibold tracking-wider transition-all duration-300 border-b-2
                     ${isActive && !isMinimized ? 'border-neon-blue bg-white/10 text-white shadow-[0_0_10px_rgba(59,130,246,0.5)]' : 'border-transparent text-slate-400 hover:bg-white/5 hover:text-slate-200'}
                     ${isMinimized ? 'opacity-50' : ''}
                   `}
                 >
-                  {app.title}
+                  <span className="hidden md:inline">{app.title}</span>
+                  <span className="md:hidden capitalize">{app.id.split('-')[0]}</span>
                 </div>
               );
             })}

@@ -3,7 +3,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { Float, RoundedBox } from '@react-three/drei';
 import * as THREE from 'three';
 
-function BotOS({ containerRef }) {
+function BotOS({ containerRef, isMobile }) {
   const groupRef = useRef();
   const headRef = useRef();
   const antennaBulbRef = useRef();
@@ -27,34 +27,47 @@ function BotOS({ containerRef }) {
   const globalPointer = useRef({ x: 0, y: 0 });
 
   React.useEffect(() => {
-    const handleMouseMove = (e) => {
-      idleTimer.current = 0; // Reset idle tracker
+    const handleMove = (x, y) => {
+      idleTimer.current = 0;
       if (!containerRef.current) return;
       
-      // Get the exact physical pixel location of the robot on the screen
       const rect = containerRef.current.getBoundingClientRect();
       const robotCenterX = rect.left + rect.width / 2;
       const robotCenterY = rect.top + rect.height / 2;
       
-      // Calculate distance of mouse from the robot's face
-      const deltaX = e.clientX - robotCenterX;
-      const deltaY = e.clientY - robotCenterY;
+      const deltaX = x - robotCenterX;
+      const deltaY = y - robotCenterY;
       const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
       
-      // If the mouse is out of his vision range (e.g. over the apps on the left)
-      // he loses interest and completely resets his posture forward.
-      if (distance > 700) {
+      // Calibrate vision range: 700px on desktop, ~350px on mobile
+      const visionThreshold = isMobile ? 350 : 700;
+      
+      if (distance > visionThreshold) {
         globalPointer.current.x = 0;
         globalPointer.current.y = 0;
       } else {
-        // Normalize the distance dynamically based on screen size so looking across the screen maxes out around -1 to 1
-        globalPointer.current.x = (deltaX / window.innerWidth) * 2.5;
-        globalPointer.current.y = -(deltaY / window.innerHeight) * 2.5; 
+        // Subtle tracking on mobile (1.5x) vs full tracking on desktop (2.5x)
+        const intensity = isMobile ? 1.5 : 2.5;
+        globalPointer.current.x = (deltaX / window.innerWidth) * intensity;
+        globalPointer.current.y = -(deltaY / window.innerHeight) * intensity; 
       }
     };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+
+    const onMouseMove = (e) => handleMove(e.clientX, e.clientY);
+    const onTouchMove = (e) => {
+      if (e.touches[0]) {
+        handleMove(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    };
+
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('touchmove', onTouchMove, { passive: true });
+    
+    return () => {
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('touchmove', onTouchMove);
+    };
+  }, [isMobile]);
 
   useFrame((state, delta) => {
     idleTimer.current += delta;
@@ -185,6 +198,7 @@ function BotOS({ containerRef }) {
         ref={groupRef} 
         onPointerOver={() => setIsHovered(true)} 
         onPointerOut={() => setIsHovered(false)}
+        scale={isMobile ? 0.8 : 1}
       >
         
         {/* === HEAD GROUP === */}
@@ -327,16 +341,29 @@ function BotOS({ containerRef }) {
 
 export default function AiMascot() {
   const containerRef = useRef(null);
+  const [isMobile, setIsMobile] = React.useState(window.innerWidth < 768);
+
+  React.useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   
   return (
     <div ref={containerRef} className="w-full h-full relative pointer-events-auto cursor-pointer">
-      {/* Zoomed out camera slightly to accommodate larger body */}
-      <Canvas camera={{ position: [0, 0, 9], fov: 45 }} dpr={[1, 2]}>
+      {/* Dynamic camera position for mobile vs desktop - Slightly closer with the new taller container */}
+      <Canvas 
+        camera={{ 
+          position: [0, 0.5, isMobile ? 11 : 9], 
+          fov: 45 
+        }} 
+        dpr={[1, 2]}
+      >
         <ambientLight intensity={0.6} />
         <directionalLight position={[10, 10, 5]} intensity={1.5} castShadow />
         <pointLight position={[-10, 5, -5]} color="#38bdf8" intensity={20} distance={20} />
         
-        <BotOS containerRef={containerRef} />
+        <BotOS containerRef={containerRef} isMobile={isMobile} />
       </Canvas>
     </div>
   );

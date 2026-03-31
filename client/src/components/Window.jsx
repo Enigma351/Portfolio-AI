@@ -36,8 +36,8 @@ export default function Window({ title, id, children }) {
         top: 0,
         left: 0,
       } : {
-        width: 'min(900px, 90vw)',
-        height: 'min(600px, 80vh)',
+        width: 'min(900px, 95vw)',
+        height: 'min(600px, 75vh)',
       }}
       onPointerDown={() => setActive(id)}
     >
