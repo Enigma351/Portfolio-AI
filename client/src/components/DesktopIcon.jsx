@@ -43,9 +43,14 @@ export default function DesktopIcon({ app }) {
     'projects': Icons.FolderRoot,
     'ai-assistant': Icons.Bot,
     'jd-matcher': Icons.Target,
+    'skills': Icons.LayoutGrid,
+    'system-monitor': Icons.Activity,
+    'explorer': Icons.Monitor,
+    'education': Icons.GraduationCap,
     'experience': Icons.BarChart3,
     'resume': Icons.FileText,
-    'contact': Icons.Mail
+    'contact': Icons.Mail,
+    'settings': Icons.Settings
   };
   
   const IconComponent = idToIcon[app.id] || Icons.Box;

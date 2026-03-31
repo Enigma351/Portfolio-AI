@@ -1,120 +1,225 @@
-import React from 'react';
-import { Download, FileText } from 'lucide-react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  Download, 
+  FileText, 
+  Eye, 
+  Layers, 
+  ShieldCheck, 
+  Search, 
+  ExternalLink,
+  ChevronRight,
+  Info,
+  Calendar,
+  Award,
+  Globe
+} from 'lucide-react';
 
 export default function ResumeApp() {
+  const [activeTab, setActiveTab] = useState('snapshot');
+  const [isDownloading, setIsDownloading] = useState(false);
+
   const downloadResume = () => {
-    // Construct path to the PDF file in the public folder
-    const pdfUrl = '/ParthaSenFinalResume2026 (1).pdf';
-    
-    // Create a temporary link element to trigger the download
-    const link = document.createElement('a');
-    link.href = pdfUrl;
-    link.download = 'Partha_Sen_Resume.pdf'; // Name the downloaded file
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    setIsDownloading(true);
+    setTimeout(() => {
+      const pdfUrl = '/ParthaSenFinalResume2026 (1).pdf';
+      const link = document.createElement('a');
+      link.href = pdfUrl;
+      link.download = 'Partha_Sen_Resume.pdf';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setIsDownloading(false);
+    }, 2000);
   };
 
-  return (
-    <div className="flex flex-col bg-slate-900 text-slate-200">
-      <div className="flex items-center justify-between p-4 border-b border-slate-700 bg-slate-800/80 sticky top-0 backdrop-blur-md z-10">
-        <h3 className="font-bold flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-          <div className="flex items-center gap-2">
-            <FileText size={18} className="text-neon-purple"/> 
-            <span className="truncate max-w-[150px] sm:max-w-xs">ParthaSenFinalResume...</span>
+  const snapshotData = [
+    { label: 'Role', value: 'Front-End Engineer', icon: <Globe size={14} /> },
+    { label: 'Experience', value: '2+ Years Industry', icon: <Calendar size={14} /> },
+    { label: 'Specialty', value: 'React / MERN Stack', icon: <Award size={14} /> },
+    { label: 'Location', value: 'Bengaluru, India', icon: <ShieldCheck size={14} /> }
+  ];
+
+  const renderSnapshot = () => (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+       {snapshotData.map((item, i) => (
+         <motion.div 
+           key={i}
+           initial={{ opacity: 0, y: 10 }}
+           animate={{ opacity: 1, y: 0 }}
+           transition={{ delay: i * 0.1 }}
+           className="p-6 rounded-2xl bg-white/5 border border-white/10 flex items-center gap-6 group hover:bg-black/40 transition-all"
+         >
+            <div className="w-12 h-12 rounded-xl bg-neon-blue/10 flex items-center justify-center text-neon-blue group-hover:scale-110 transition-transform">
+               {item.icon}
+            </div>
+            <div className="space-y-1">
+               <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{item.label}</div>
+               <div className="text-sm font-bold text-white uppercase tracking-tight">{item.value}</div>
+            </div>
+         </motion.div>
+       ))}
+       
+       <div className="md:col-span-2 p-8 rounded-3xl bg-gradient-to-br from-neon-purple/20 to-transparent border border-neon-purple/20 space-y-4">
+          <div className="flex items-center gap-3 text-neon-purple">
+             <Info size={20} />
+             <h3 className="text-xs font-black uppercase tracking-widest tracking-[0.3em]">Neural Summary</h3>
           </div>
-        </h3>
-        <button 
-          onClick={downloadResume}
-          className="bg-neon-blue hover:bg-blue-600 px-3 py-1.5 rounded-lg text-sm font-semibold flex items-center gap-2 transition-colors shrink-0"
-        >
-          <Download size={14} /> Download CV
-        </button>
+          <p className="text-sm text-slate-300 leading-relaxed font-medium italic">
+            "High-performance developer specializing in building interactive, reactive applications using the MERN stack. Proficient in UI optimization, REST architectures, and scalable frontend design systems."
+          </p>
+       </div>
+    </div>
+  );
+
+  const renderPdfViewer = () => (
+    <div className="flex-1 rounded-2xl border border-white/10 bg-white overflow-y-auto no-scrollbar shadow-2xl relative group">
+       <div className="absolute inset-0 bg-slate-900/5 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-10 pointer-events-none">
+          <div className="px-6 py-3 bg-slate-900 text-white rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center gap-3 shadow-2xl">
+             <Search size={16} /> Interactive Reader Active
+          </div>
+       </div>
+       
+       {/* PDF Inner Mock */}
+       <div className="p-10 text-slate-900 space-y-8 font-serif leading-relaxed text-sm">
+          <div className="text-center border-b-2 border-slate-900 pb-4">
+             <h1 className="text-4xl font-black uppercase tracking-tighter">Partha Sen</h1>
+             <p className="text-xs font-bold text-slate-700 mt-2 uppercase tracking-widest">Front-End Developer | Bengaluru, India</p>
+          </div>
+          
+          <div className="space-y-6">
+             <section className="space-y-2">
+                <h2 className="text-xs font-black uppercase tracking-[0.2em] border-b border-slate-300 pb-1">Professional Experience</h2>
+                <div className="space-y-4">
+                   <div>
+                      <div className="flex justify-between font-bold text-xs uppercase">
+                         <span>Vitorscape Technologies</span>
+                         <span>2024 - 2025</span>
+                      </div>
+                      <p className="text-[11px] text-slate-600 mt-1 italic">Front-End Developer (Remote)</p>
+                   </div>
+                   <div>
+                      <div className="flex justify-between font-bold text-xs uppercase">
+                         <span>Unified Mentor Pvt Ltd</span>
+                         <span>2024</span>
+                      </div>
+                      <p className="text-[11px] text-slate-600 mt-1 italic">Full Stack Intern (Bengaluru)</p>
+                   </div>
+                </div>
+             </section>
+
+             <section className="space-y-2">
+                <h2 className="text-xs font-black uppercase tracking-[0.2em] border-b border-slate-300 pb-1">Core Stack</h2>
+                <p className="text-[11px] text-slate-700 font-bold">JavaScript, React.js, Node.js, Express.js, MongoDB, Tailwind CSS, REST APIs</p>
+             </section>
+          </div>
+       </div>
+    </div>
+  );
+
+  return (
+    <div className="flex flex-col h-full bg-slate-950/40 font-sans overflow-hidden">
+      {/* Dynamic Header */}
+      <div className="h-16 border-b border-white/5 bg-black/40 flex items-center justify-between px-6 md:px-10 shrink-0">
+         <div className="flex bg-black/60 p-1 rounded-xl border border-white/5">
+            <button 
+              onClick={() => setActiveTab('snapshot')}
+              className={`px-4 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest flex items-center gap-2 transition-all
+                ${activeTab === 'snapshot' ? 'bg-white/5 text-white shadow-lg' : 'text-slate-500 hover:text-slate-300'}
+              `}
+            >
+               <Layers size={14} /> Snapshot
+            </button>
+            <button 
+              onClick={() => setActiveTab('pdf')}
+              className={`px-4 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest flex items-center gap-2 transition-all
+                ${activeTab === 'pdf' ? 'bg-white/5 text-white shadow-lg' : 'text-slate-500 hover:text-slate-300'}
+              `}
+            >
+               <Eye size={14} /> Full Transcript
+            </button>
+         </div>
+
+         <button 
+           onClick={downloadResume}
+           disabled={isDownloading}
+           className="px-6 py-2.5 bg-neon-blue text-white rounded-xl text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-3 hover:shadow-[0_0_20px_#3b82f644] transition-all disabled:opacity-50"
+         >
+            {isDownloading ? (
+               <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1 }} className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full"></motion.div>
+            ) : (
+               <>DOWNLOAD CV <Download size={16} /></>
+            )}
+         </button>
+      </div>
+
+      {/* Content Engine */}
+      <div className="flex-1 p-6 md:p-10 flex flex-col no-scrollbar overflow-y-auto pb-24">
+         <div className="max-w-4xl mx-auto w-full flex-1 flex flex-col">
+            <AnimatePresence mode="wait">
+               {activeTab === 'snapshot' ? (
+                 <motion.div 
+                   key="snapshot"
+                   initial={{ opacity: 0, scale: 0.98 }}
+                   animate={{ opacity: 1, scale: 1 }}
+                   exit={{ opacity: 0, scale: 1.02 }}
+                   className="h-full"
+                 >
+                    {renderSnapshot()}
+                 </motion.div>
+               ) : (
+                 <motion.div 
+                   key="pdf"
+                   initial={{ opacity: 0, y: 20 }}
+                   animate={{ opacity: 1, y: 0 }}
+                   exit={{ opacity: 0, y: -20 }}
+                   className="flex-1 flex flex-col"
+                 >
+                    {renderPdfViewer()}
+                 </motion.div>
+               )}
+            </AnimatePresence>
+         </div>
       </div>
       
-      <div className="p-4 sm:p-8 pb-16 w-full max-w-2xl mx-auto shadow-2xl bg-white text-slate-900 min-h-full my-4 text-xs sm:text-sm leading-relaxed font-serif">
-        {/* Mock Resume Content */}
-        <div className="border-b-2 border-slate-900 pb-2 mb-4 text-center">
-          <h1 className="text-3xl sm:text-4xl font-black text-slate-900 uppercase">Partha Sen</h1>
-          <p className="font-semibold text-slate-700 mt-1">Bengaluru, Karnataka / India | +91 9101535282 | senpartho15@gmail.com | linkedin.com/in/partha-sen</p>
-        </div>
-        
-        <div className="space-y-4">
-          <section>
-            <h2 className="text-lg font-bold border-b border-slate-900 pb-1 mb-2 uppercase">Summary</h2>
-            <p className="text-justify">
-              Enthusiastic developer with strong expertise in building interactive, high-performance web applications using MongoDB, Express.js, React, and Node.js. Highly proficient in JavaScript, DOM manipulation, CSS optimization, RESTful APIs, debugging, and frontend performance improvements. Passionate about crafting scalable, responsive, and modern web solutions while leveraging best practices in development and design.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-lg font-bold border-b border-slate-900 pb-1 mb-2 uppercase">Technical Skills</h2>
-            <p><strong>Languages & Frameworks:</strong> JavaScript, HTML, CSS, React.js, Node.js, Express.js, Tailwind CSS, Bootstrap, WordPress</p>
-            <p><strong>Core Expertise:</strong> DOM Manipulation, REST APIs, Debugging, Responsive Design, Performance Optimization</p>
-            <p><strong>Tools & Platforms:</strong> Git, GitHub, Vite, Postman, MongoDB</p>
-            <p><strong>Other:</strong> Problem Solving, Agile Methodology, Team Collaboration, Communication, Attention to Detail</p>
-          </section>
-
-          <section>
-            <h2 className="text-lg font-bold border-b border-slate-900 pb-1 mb-2 uppercase">Professional Experience</h2>
-            
-            <div className="mb-3">
-              <div className="flex flex-col sm:flex-row justify-between font-bold">
-                 <span>Vitorscape Technologies</span>
-                 <span>Remote</span>
-              </div>
-              <div className="font-semibold italic">Front-End Developer (11/2024 - 11/2025)</div>
-              <ul className="list-disc list-outside ml-5 mt-1 text-justify space-y-1">
-                <li>Developed and maintained dynamic web interfaces using React.js, JavaScript (ES6), and Tailwind CSS, enhancing UI performance and responsiveness across devices.</li>
-                <li>Built reusable components and integrated RESTful APIs, improving data handling efficiency by 30%.</li>
-                <li>Collaborated with designers and backend teams via GitHub to deliver scalable front-end solutions in Agile sprints.</li>
-                <li>Led the redesign of client dashboards and admin panels, boosting overall user engagement.</li>
-              </ul>
-            </div>
-
-            <div className="mb-3">
-              <div className="flex flex-col sm:flex-row justify-between font-bold">
-                 <span>Unified Mentor Pvt Ltd</span>
-                 <span>Bengaluru, Karnataka</span>
-              </div>
-              <div className="font-semibold italic">Full Stack Web Developer Intern (04/2024 - 06/2024)</div>
-              <ul className="list-disc list-outside ml-5 mt-1 text-justify space-y-1">
-                <li>Developing full-stack web applications using the MERN stack, with responsive front-end components in React and Angular.</li>
-                <li>Building and optimizing RESTful APIs using Node.js, Express.js, and MongoDB, supporting 300+ mock users.</li>
-                <li>Collaborating in Agile sprints, contributing to code reviews and AWS deployments via Git/GitHub.</li>
-              </ul>
-            </div>
-            
-            <div className="mb-3">
-              <div className="flex flex-col sm:flex-row justify-between font-bold">
-                 <span>SkillDzire</span>
-                 <span>Remote</span>
-              </div>
-              <div className="font-semibold italic">MERN Stack Developer Intern (09/2023 - 11/2023)</div>
-              <ul className="list-disc list-outside ml-5 mt-1 text-justify space-y-1">
-                <li>Developed responsive UIs using React.js, Bootstrap, and Tailwind CSS.</li>
-                <li>Built RESTful APIs with Node.js, Express.js, and MongoDB (Mongoose).</li>
-                <li>Collaborated in Agile sprints, participated in code reviews, and used Git/GitHub for version control.</li>
-              </ul>
-            </div>
-          </section>
-
-          <section>
-             <h2 className="text-lg font-bold border-b border-slate-900 pb-1 mb-2 uppercase">Education</h2>
-             <div className="flex flex-col sm:flex-row justify-between font-semibold">
-                <span>NEW HORIZON COLLEGE OF ENGINEERING</span>
-                <span>CGPA - 7.9</span>
-             </div>
-             <div className="italic text-slate-700">2020 - 2024 | B.E(ISE)</div>
-
-             <div className="flex flex-col sm:flex-row justify-between font-semibold mt-2">
-                <span>LUMDING COLLEGE</span>
-                <span>PERCENTAGE - 84.2%</span>
-             </div>
-             <div className="italic text-slate-700">2018 - 2020 | 12TH</div>
-          </section>
-        </div>
+      {/* Meta Footer */}
+      <div className="h-8 border-t border-white/5 bg-black/20 flex items-center justify-between px-10 text-[9px] text-slate-600 font-mono tracking-widest uppercase">
+         <div className="flex items-center gap-4">
+            <span>VERIFICATION ID: PAR-792-RES</span>
+            <span>|</span>
+            <span className="flex items-center gap-1"><ShieldCheck size={10} className="text-green-500" /> SECURE DOCUMENT</span>
+         </div>
+         <div className="hidden md:flex items-center gap-2">
+            <span>System Node: 0x42f8e</span>
+         </div>
       </div>
+
+      {/* Download Animation Overlay */}
+      <AnimatePresence>
+        {isDownloading && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-xl flex flex-col items-center justify-center p-10 text-center space-y-8"
+          >
+             <div className="relative">
+                <motion.div 
+                  animate={{ rotate: 360 }}
+                  transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+                  className="w-24 h-24 rounded-full border-2 border-white/5 border-t-neon-blue"
+                />
+                <div className="absolute inset-0 flex items-center justify-center text-neon-blue">
+                   <Download size={32} className="animate-bounce" />
+                </div>
+             </div>
+             <div className="space-y-2">
+                <h3 className="text-xl font-black text-white uppercase tracking-tighter">Preparing Transcript</h3>
+                <p className="text-[10px] text-slate-500 font-black uppercase tracking-[0.3em]">Accessing career kernel node...</p>
+             </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -4,6 +4,13 @@
   --color-dark-surface: #0f172a; /* slate-900 */
   --color-neon-blue: #3b82f6;
   --color-neon-purple: #8b5cf6;
+
+  --animate-shimmer: shimmer 2s infinite;
+
+  @keyframes shimmer {
+    from { transform: translateX(-100%) skewX(-20deg); }
+    to { transform: translateX(200%) skewX(-20deg); }
+  }
 }
 
 @layer base {
@@ -13,4 +20,23 @@
     font-family: 'Inter', system-ui, sans-serif;
     overflow: hidden; /* Prevent scrolling for the Desktop UI */
   }
+}
+
+/* Custom Scrollbar Utility */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.3);
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.5);
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }

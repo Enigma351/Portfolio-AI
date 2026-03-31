@@ -9,7 +9,9 @@ function App() {
   return (
     <>
       {!isBooted && <BootScreen />}
-      <Desktop />
+      <React.Suspense fallback={null}>
+        <Desktop />
+      </React.Suspense>
     </>
   )
 }

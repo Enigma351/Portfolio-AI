@@ -10,9 +10,17 @@ app.use(express.json());
 const apiRoutes = require('./routes/apiRoutes');
 app.use('/api', apiRoutes);
 
-// Basic Route
+// Basic Routes
 app.get('/', (req, res) => {
   res.send('Partha OS API is running...');
+});
+
+app.get('/api/health', (req, res) => {
+  res.json({ 
+    status: 'ok', 
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime() 
+  });
 });
 
 // Connect to MongoDB

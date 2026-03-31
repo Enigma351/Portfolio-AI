@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Float, RoundedBox } from '@react-three/drei';
 import * as THREE from 'three';
+import { useStore } from '../store/useStore';
 
 function BotOS({ containerRef, isMobile }) {
   const groupRef = useRef();
@@ -11,6 +12,11 @@ function BotOS({ containerRef, isMobile }) {
 
   const leftEyeRef = useRef();
   const rightEyeRef = useRef();
+
+  // Store mappings
+  const mascotColor = useStore(state => state.mascotColor);
+  const neuralSpeed = useStore(state => state.neuralSpeed);
+  const isPettingEnabled = useStore(state => state.isPettingEnabled);
   
   // Blink state
   const blinkTimer = useRef(0);
@@ -90,12 +96,12 @@ function BotOS({ containerRef, isMobile }) {
     // 1. Mouse Tracking for the entire robot
     if (groupRef.current) {
       // Smooth body sway - Calibrated for natural real-world physics
-      groupRef.current.position.x = THREE.MathUtils.lerp(groupRef.current.position.x, targetX * 1.5, 0.08);
-      groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, targetY * 1.5, 0.08);
+      groupRef.current.position.x = THREE.MathUtils.lerp(groupRef.current.position.x, targetX * 1.5, neuralSpeed);
+      groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, targetY * 1.5, neuralSpeed);
       
       // Robot leans globally towards the target
-      groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, targetX * 0.6, 0.1);
-      groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, -targetY * 0.6, 0.1);
+      groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, targetX * 0.6, neuralSpeed * 1.25);
+      groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, -targetY * 0.6, neuralSpeed * 1.25);
     }
     
     // 2. Head specifically looks perfectly at the cursor
@@ -108,11 +114,11 @@ function BotOS({ containerRef, isMobile }) {
       const idleBreathingX = Math.sin(state.clock.elapsedTime * 0.5) * 0.05;
       const idleBreathingY = Math.cos(state.clock.elapsedTime * 0.3) * 0.05;
 
-      headRef.current.rotation.y = THREE.MathUtils.lerp(headRef.current.rotation.y, headTargetX + idleBreathingY, 0.15);
-      headRef.current.rotation.x = THREE.MathUtils.lerp(headRef.current.rotation.x, -headTargetY + idleBreathingX, 0.15);
+      headRef.current.rotation.y = THREE.MathUtils.lerp(headRef.current.rotation.y, headTargetX + idleBreathingY, neuralSpeed * 1.8);
+      headRef.current.rotation.x = THREE.MathUtils.lerp(headRef.current.rotation.x, -headTargetY + idleBreathingX, neuralSpeed * 1.8);
       
       // If hovered, tilt head like a confused puppy
-      const targetZ = isHovered ? Math.PI / 8 : 0;
+      const targetZ = (isHovered && isPettingEnabled) ? Math.PI / 8 : 0;
       headRef.current.rotation.z = THREE.MathUtils.lerp(headRef.current.rotation.z, targetZ, 0.1);
 
       // Eye shifting (eyes slide across the screen to track target precisely)
@@ -136,7 +142,7 @@ function BotOS({ containerRef, isMobile }) {
     }
     
     // If hovered, he gets extremely happy and acts like a petted dog!
-    if (isHovered) {
+    if (isHovered && isPettingEnabled) {
       // Pant/bounce from joy
       headRef.current.position.y = 1.2 + Math.abs(Math.sin(state.clock.elapsedTime * 15)) * 0.08;
       
@@ -234,13 +240,13 @@ function BotOS({ containerRef, isMobile }) {
           {/* Left Eye */}
           <mesh ref={leftEyeRef} position={[-0.35, 0.1, 0.81]}>
             <capsuleGeometry args={[0.08, 0.2, 8, 16]} />
-            <meshStandardMaterial color="#38bdf8" emissive="#38bdf8" emissiveIntensity={isHovered ? 5 : 2} />
+            <meshStandardMaterial color={mascotColor} emissive={mascotColor} emissiveIntensity={isHovered ? 5 : 2} />
           </mesh>
 
           {/* Right Eye */}
           <mesh ref={rightEyeRef} position={[0.35, 0.1, 0.81]}>
             <capsuleGeometry args={[0.08, 0.2, 8, 16]} />
-            <meshStandardMaterial color="#38bdf8" emissive="#38bdf8" emissiveIntensity={isHovered ? 5 : 2} />
+            <meshStandardMaterial color={mascotColor} emissive={mascotColor} emissiveIntensity={isHovered ? 5 : 2} />
           </mesh>
 
           {/* Blush (Cheeks) */}
@@ -272,7 +278,7 @@ function BotOS({ containerRef, isMobile }) {
             {/* Glowing Bulb */}
             <mesh ref={antennaBulbRef} position={[0, 0.7, 0]}>
                <sphereGeometry args={[0.15, 16, 16]} />
-               <meshStandardMaterial color="#3b82f6" emissive="#3b82f6" emissiveIntensity={2} />
+               <meshStandardMaterial color={mascotColor} emissive={mascotColor} emissiveIntensity={2} />
             </mesh>
           </group>
 
@@ -306,7 +312,7 @@ function BotOS({ containerRef, isMobile }) {
           </mesh>
           <mesh position={[0, 0.1, 0.84]}>
             <circleGeometry args={[0.2, 32]} />
-            <meshStandardMaterial color="#38bdf8" emissive="#38bdf8" emissiveIntensity={2} />
+            <meshStandardMaterial color={mascotColor} emissive={mascotColor} emissiveIntensity={2} />
           </mesh>
 
           {/* Hovering Left Arm */}
@@ -330,7 +336,7 @@ function BotOS({ containerRef, isMobile }) {
           {/* Under-glow thruster floating below him */}
           <mesh position={[0, -1.3, 0]} rotation={[Math.PI / 2, 0, 0]}>
              <torusGeometry args={[0.6, 0.08, 16, 64]} />
-             <meshStandardMaterial color="#38bdf8" emissive="#38bdf8" emissiveIntensity={4} />
+             <meshStandardMaterial color={mascotColor} emissive={mascotColor} emissiveIntensity={4} />
           </mesh>
         </group>
 
@@ -341,6 +347,7 @@ function BotOS({ containerRef, isMobile }) {
 
 export default function AiMascot() {
   const containerRef = useRef(null);
+  const mascotColor = useStore(state => state.mascotColor);
   const [isMobile, setIsMobile] = React.useState(window.innerWidth < 768);
 
   React.useEffect(() => {
@@ -361,7 +368,7 @@ export default function AiMascot() {
       >
         <ambientLight intensity={0.6} />
         <directionalLight position={[10, 10, 5]} intensity={1.5} castShadow />
-        <pointLight position={[-10, 5, -5]} color="#38bdf8" intensity={20} distance={20} />
+        <pointLight position={[-10, 5, -5]} color={mascotColor} intensity={20} distance={20} />
         
         <BotOS containerRef={containerRef} isMobile={isMobile} />
       </Canvas>
