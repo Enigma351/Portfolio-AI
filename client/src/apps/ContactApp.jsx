@@ -46,7 +46,7 @@ export default function ContactApp() {
       icon: <InstagramIcon />, 
       label: 'Instagram', 
       value: '@partha.sen', 
-      href: 'https://instagram.com/partha.sen' 
+      href: 'https://www.instagram.com/partho34/' 
     }
   ];
 
