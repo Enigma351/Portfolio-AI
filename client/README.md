@@ -1,16 +1,50 @@
-# React + Vite
+# Partha OS - Client Application 🎨
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This directory contains the React-based frontend for **Partha OS**, an interactive portfolio environment.
 
-Currently, two official plugins are available:
+## 🚀 Getting Started
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+1. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-## React Compiler
+2. **Configure Environment**
+   ```bash
+   cp .env.example .env
+   # Add your VITE_API_URL
+   ```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+3. **Run Development Server**
+   ```bash
+   npm run dev
+   ```
 
-## Expanding the ESLint configuration
+## 🛠️ Features
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- **OS Experience**: Desktop, Windows, Taskbar, Icons.
+- **3D Graphics**: Interactive Starfield background (Three.js).
+- **AI Integration**: JD Matcher & AI Mascot interface.
+- **State Management**: Zustand-powered OS state.
+- **Animations**: GSAP-driven transitions and window management.
+
+## 📂 Directory Structure
+
+- `src/apps/`: Individual OS applications (e.g., ContactApp, SettingsApp).
+- `src/components/`: Reusable UI components (Window, Desktop, BootScreen).
+- `src/store/`: Zustand store for managing OS state (windows, z-index, etc.).
+- `src/assets/`: Visual assets like images and styles.
+
+## 🛠️ Tech Stack
+
+- **React 19**: Modern UI development.
+- **Vite 6**: Fast build and development.
+- **Tailwind CSS 4**: Modern styling system.
+- **GSAP & Framer Motion**: Advanced animations.
+- **Three.js & R3F**: 3D graphics.
+- **Zustand**: Global state management.
+- **Lucide React**: Modern iconography.
+
+---
+
+For full project details, see the [Root README.md](../README.md).
