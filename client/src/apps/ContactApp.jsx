@@ -80,7 +80,7 @@ export default function ContactApp() {
   const socialLinks = [
     { name: 'GitHub', icon: <GithubIcon />, link: 'https://github.com/Enigma351', color: 'text-white' },
     { name: 'LinkedIn', icon: <LinkedinIcon />, link: 'https://www.linkedin.com/in/partha-sen-1793822b0', color: 'text-blue-400' },
-    { name: 'Portfolio', icon: <Globe size={20} />, link: ' https://portfolio-ai-mocha-three.vercel.app', color: 'text-neon-blue' }
+    { name: 'Portfolio', icon: <Globe size={20} />, link: 'https://my-website-sand-sigma.vercel.app/', color: 'text-neon-blue' }
   ];
 
   return (
