@@ -3,8 +3,6 @@
 
 Welcome to **Partha OS**, a high-performance, AI-integrated portfolio designed as a desktop operating system. Built with modern web technologies, this project showcases projects, skills, and experience through an immersive, interactive interface.
 
-![Partha OS Screenshot](https://raw.githubusercontent.com/Enigma351/Portfolio-AI/main/client/public/screenshot.png) *(Note: Replace with actual screenshot URL)*
-
 ---
 
 ## 🏗️ Architecture & Features
